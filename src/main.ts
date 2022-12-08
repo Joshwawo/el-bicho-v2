@@ -2,6 +2,8 @@ import { dirname, importx } from "@discordx/importer";
 import type { Interaction, Message } from "discord.js";
 import { IntentsBitField } from "discord.js";
 import { Client } from "discordx";
+import 'dotenv/config'
+import {generateDependencyReport} from '@discordjs/voice'
 
 export const bot = new Client({
   // To use only guild command
@@ -28,6 +30,7 @@ export const bot = new Client({
 bot.once("ready", async () => {
   // Make sure all guilds are cached
   // await bot.guilds.fetch();
+  console.log(generateDependencyReport())
 
   // Synchronize applications commands with Discord
   await bot.initApplicationCommands();
