@@ -3,7 +3,7 @@ import type { Interaction, Message } from "discord.js";
 import { IntentsBitField } from "discord.js";
 import { Client } from "discordx";
 import 'dotenv/config'
-import {generateDependencyReport} from '@discordjs/voice'
+// import {generateDependencyReport} from '@discordjs/voice'
 
 export const bot = new Client({
   // To use only guild command

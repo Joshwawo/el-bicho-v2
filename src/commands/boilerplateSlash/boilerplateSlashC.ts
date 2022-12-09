@@ -6,7 +6,7 @@ import {
 } from "discord.js";
 
 @Discord()
-export class Testing2 {
+export class ConInputs {
   @Slash({ description: "Return a pong" })
   ga(
     @SlashOption({
@@ -21,3 +21,11 @@ export class Testing2 {
     interaction.reply(`${interaction.user.username} You said ${test}`);
   }
 }
+
+// @Discord()
+// export class SoloSinNada {
+//   @Slash({ description: "Return a cats images", name: "cats" })
+//   cats(interaction: CommandInteraction) {
+//     interaction.reply(`${interaction.user.username} `);
+//   }
+// }

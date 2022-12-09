@@ -2,6 +2,7 @@ import { dirname, importx } from "@discordx/importer";
 import { IntentsBitField } from "discord.js";
 import { Client } from "discordx";
 import 'dotenv/config';
+// import {generateDependencyReport} from '@discordjs/voice'
 export const bot = new Client({
     // To use only guild command
     // botGuilds: [(client) => client.guilds.cache.map((guild) => guild.id)],
