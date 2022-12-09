@@ -36,46 +36,46 @@ export class MyQueue extends Queue {
     }
     controlsRow() {
         const nextButton = new ButtonBuilder()
-            .setLabel("Next")
+            .setLabel("Siguiente")
             .setEmoji("⏭")
             .setStyle(ButtonStyle.Primary)
             .setDisabled(!this.isPlaying)
             .setCustomId("btn-next");
         const pauseButton = new ButtonBuilder()
-            .setLabel(this.isPlaying ? "Pause" : "Resume")
-            .setEmoji(this.isPlaying ? "⏸️" : "▶️")
-            .setStyle(ButtonStyle.Primary)
+            .setLabel(this.isPlaying ? "Pausar" : "Reproducir")
+            .setEmoji(this.isPlaying ? "⏸️" : "▶")
+            .setStyle(this.isPlaying ? ButtonStyle.Primary : ButtonStyle.Success)
             .setCustomId("btn-pause");
         const stopButton = new ButtonBuilder()
-            .setLabel("Stop")
+            .setLabel("Detener")
             .setStyle(ButtonStyle.Danger)
             .setCustomId("btn-leave");
         const repeatButton = new ButtonBuilder()
-            .setLabel("Repeat")
+            .setLabel("Repetir")
             .setEmoji("🔂")
             .setDisabled(!this.isPlaying)
             .setStyle(this.repeat ? ButtonStyle.Danger : ButtonStyle.Primary)
             .setCustomId("btn-repeat");
         const loopButton = new ButtonBuilder()
-            .setLabel("Loop")
+            .setLabel("En Bucle")
             .setEmoji("🔁")
             .setDisabled(!this.isPlaying)
             .setStyle(this.loop ? ButtonStyle.Danger : ButtonStyle.Primary)
             .setCustomId("btn-loop");
         const row1 = new ActionRowBuilder().addComponents(stopButton, pauseButton, nextButton, repeatButton, loopButton);
         const queueButton = new ButtonBuilder()
-            .setLabel("Queue")
-            .setEmoji("🎵")
+            .setLabel("Ver Cola")
+            .setEmoji("👀")
             .setStyle(ButtonStyle.Primary)
             .setCustomId("btn-queue");
         const mixButton = new ButtonBuilder()
-            .setLabel("Shuffle")
+            .setLabel("Revolver Cola")
             .setEmoji("🎛️")
             .setDisabled(!this.isPlaying)
             .setStyle(ButtonStyle.Primary)
             .setCustomId("btn-mix");
         const controlsButton = new ButtonBuilder()
-            .setLabel("Controls")
+            .setLabel("Actualizar")
             .setEmoji("🔄")
             .setStyle(ButtonStyle.Primary)
             .setCustomId("btn-controls");
@@ -88,7 +88,7 @@ export class MyQueue extends Queue {
         }
         this.lockUpdate = true;
         const embed = new EmbedBuilder();
-        embed.setTitle("Music Controls");
+        embed.setTitle("Reproduciendo");
         const currentTrack = this.currentTrack;
         const nextTrack = this.nextTrack;
         if (!currentTrack) {
@@ -103,9 +103,9 @@ export class MyQueue extends Queue {
             ? currentTrack.metadata.options?.user
             : currentTrack.metadata?.user;
         embed.addFields({
-            name: "Now Playing" +
+            name: "En reproduccion" +
                 (this.size > 2 ? ` (Total: ${this.size} tracks queued)` : ""),
-            value: `[${currentTrack.metadata.title}](${currentTrack.metadata.url ?? "NaN"})${user ? ` by ${user}` : ""}`,
+            value: `[${currentTrack.metadata.title}](${currentTrack.metadata.url ?? "NaN"})${user ? ` por ${user}` : ""}`,
         });
         const progressBarOptions = {
             arrow: "🔘",
@@ -131,10 +131,10 @@ export class MyQueue extends Queue {
             embed.setThumbnail(currentTrack.metadata.info.bestThumbnail.url);
         }
         embed.addFields({
-            name: "Next Song",
+            name: "Siguiente cancion",
             value: nextTrack
                 ? `[${nextTrack.title}](${nextTrack.url})`
-                : "No upcoming song",
+                : "No hay mas canciones en la cola",
         });
         const pMsg = {
             components: [...this.controlsRow()],
@@ -169,7 +169,7 @@ export class MyQueue extends Queue {
         const currentTrack = this.currentTrack;
         if (!this.isReady || !currentTrack) {
             const pMsg = await interaction.reply({
-                content: "> could not process queue atm, try later!",
+                content: "> No se ha podido procesar la cola por el momento, intenta mas tarde 😔",
                 ephemeral: true,
             });
             if (pMsg instanceof Message) {
@@ -178,13 +178,13 @@ export class MyQueue extends Queue {
             return;
         }
         if (!this.size) {
-            const pMsg = await interaction.reply(`> Playing **${currentTrack.metadata.title}**`);
+            const pMsg = await interaction.reply(`> Reproducciendo **${currentTrack.metadata.title}**`);
             if (pMsg instanceof Message) {
                 setTimeout(() => pMsg.delete(), 1e4);
             }
             return;
         }
-        const current = `> Playing **${currentTrack.metadata.title}** out of ${this.size + 1}`;
+        const current = `> Reproduciendo **${currentTrack.metadata.title}** de ${this.size + 1}`;
         const pageOptions = new PaginationResolver((index, paginator) => {
             paginator.maxLength = this.size / 10;
             if (index > paginator.maxLength) {
@@ -198,7 +198,8 @@ export class MyQueue extends Queue {
                     ? ` (${track.info.duration})`
                     : ""}`)
                 .join("\n\n");
-            return { content: `${current}\n\`\`\`markdown\n${queue}\`\`\`` };
+            const obt = { content: `${current}\n\`\`\`markdown\n${queue}\`\`\`` };
+            return obt;
         }, Math.round(this.size / 10));
         await new Pagination(interaction, pageOptions, {
             enableExit: true,

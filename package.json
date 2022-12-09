@@ -1,5 +1,5 @@
 {
-  "name": "big",
+  "name": "el-bicho-v2",
   "version": "1.0.0",
   "description": "Example of music bot with discordx",
   "main": "build/main.js",
@@ -7,13 +7,13 @@
   "scripts": {
     "build": "tsc",
     "build:changelog": "npx @discordx/changelog --root=src",
-    "dev": "ts-node-esm src/main.ts",
+    "dev:watch": "ts-node-esm src/main.ts",
     "start": "node build/main.js",
-    "watch": "nodemon --exec ts-node-esm src/main.ts"
+    "dev": "nodemon --exec ts-node-esm src/main.ts"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/oceanroleplay/discord-music-bot.git"
+    "url": "git+https://github.com/Joshwawo/el-bicho-v2.git"
   },
   "keywords": [
     "discordx",
@@ -23,12 +23,12 @@
     "discord",
     "typescript"
   ],
-  "author": "Vijay Meena <indianoceanroleplay@gmail.com> [https://github.com/oceanroleplay]",
+  "author": "Jorge Morales",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/oceanroleplay/discord-music-bot/issues"
+    "url": "https://github.com/Joshwawo/el-bicho-v2/issues"
   },
-  "homepage": "https://github.com/oceanroleplay/discord-music-bot#readme",
+  
   "dependencies": {
     "@discordjs/opus": "^0.8.0",
     "@discordjs/voice": "^0.11.0",

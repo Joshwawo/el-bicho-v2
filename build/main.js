@@ -2,7 +2,6 @@ import { dirname, importx } from "@discordx/importer";
 import { IntentsBitField } from "discord.js";
 import { Client } from "discordx";
 import 'dotenv/config';
-import { generateDependencyReport } from '@discordjs/voice';
 export const bot = new Client({
     // To use only guild command
     // botGuilds: [(client) => client.guilds.cache.map((guild) => guild.id)],
@@ -24,9 +23,12 @@ export const bot = new Client({
 bot.once("ready", async () => {
     // Make sure all guilds are cached
     // await bot.guilds.fetch();
-    console.log(generateDependencyReport());
+    // console.log(generateDependencyReport())
     // Synchronize applications commands with Discord
     await bot.initApplicationCommands();
+    // setInterval(async () => {
+    //   console.log("Me estoy actualizando cada 5 minutos");
+    // }, 3000);
     // To clear all guild commands, uncomment this line,
     // This is useful when moving from guild commands to global commands
     // It must only be executed once

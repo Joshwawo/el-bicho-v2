@@ -36,12 +36,12 @@ let music = class music {
         const totalMembers = channel.members.filter((m) => !m.user.bot);
         if (queue.isPlaying && !totalMembers.size) {
             queue.pause();
-            queue.channel.send("> To save resources, I have paused the queue since everyone has left my voice channel.");
+            queue.channel.send("> Para ahorrar recursos, la cola se pausará hasta que alguien se una a al canal de voz canal de voz.");
             if (queue.timeoutTimer) {
                 clearTimeout(queue.timeoutTimer);
             }
             queue.timeoutTimer = setTimeout(() => {
-                queue.channel?.send("> My voice channel has been open for 5 minutes and no one has joined, so the queue has been deleted.");
+                queue.channel?.send("> E lcanall de voz ha estado inactivo durante 5 minutos, y la cola se ha detenido. ");
                 queue.leave();
             }, 5 * 60 * 1000);
         }
@@ -51,19 +51,19 @@ let music = class music {
                 queue.timeoutTimer = undefined;
             }
             queue.resume();
-            queue.channel.send("> There has been a new participant in my voice channel, and the queue will be resumed. Enjoy the music 🎶");
+            queue.channel.send("> Hay un nuevo participante en mi canal de voz y se reanudará la cola. Disfruta de la música!");
         }
     }
     validateControlInteraction(interaction) {
         if (!interaction.guild ||
             !interaction.channel ||
             !(interaction.member instanceof GuildMember)) {
-            interaction.reply("> Your request could not be processed, please try again later");
+            interaction.reply("> Su solicitud no se puede procesar en este momento. Inténtalo de nuevo más tarde 😔.");
             return;
         }
         const queue = this.player.getQueue(interaction.guild, interaction.channel);
         if (interaction.member.voice.channelId !== queue.voiceChannelId) {
-            interaction.reply("> To use the controls, you need to join the bot voice channel");
+            interaction.reply("> Para poder usar este comando, debe estar en el mismo canal de voz que el bot.");
             setTimeout(() => interaction.deleteReply(), 15e3);
             return;
         }
@@ -134,13 +134,13 @@ let music = class music {
         if (!interaction.guild ||
             !interaction.channel ||
             !(interaction.member instanceof GuildMember)) {
-            interaction.reply("> Your request could not be processed, please try again later");
+            interaction.reply("> Su solicitud no se puede procesar en este momento. Inténtalo de nuevo más tarde 😔.");
             setTimeout(() => interaction.deleteReply(), 15e3);
             return;
         }
         if (!(interaction.member instanceof GuildMember) ||
             !interaction.member.voice.channel) {
-            interaction.reply("> You are not in the voice channel");
+            interaction.reply("> Debes estar en un canal de voz para usar este comando.");
             setTimeout(() => interaction.deleteReply(), 15e3);
             return;
         }
@@ -152,6 +152,7 @@ let music = class music {
         }
         return queue;
     }
+    //*Aqui empiezan los comandas slash
     async play(songName, interaction) {
         const queue = await this.processJoin(interaction);
         if (!queue) {
@@ -159,12 +160,16 @@ let music = class music {
         }
         const song = await queue.play(songName, { user: interaction.user });
         if (!song) {
-            interaction.followUp("The song could not be found");
+            const embed = new EmbedBuilder();
+            embed.setTitle(`${interaction.user.username} No se encontró la canción o la URL no es válida 😔`);
+            embed.setColor("#F20B35");
+            interaction.followUp({ embeds: [embed] });
         }
         else {
             const embed = new EmbedBuilder();
-            embed.setTitle("Enqueued");
-            embed.setDescription(`Enqueued song **${song.title}****`);
+            embed.setTitle("Agregada a la cola");
+            embed.setColor("#0BF296");
+            embed.setDescription(`Cancion **${song.title}****`);
             interaction.followUp({ embeds: [embed] });
         }
     }
@@ -177,12 +182,16 @@ let music = class music {
             user: interaction.user,
         });
         if (!songs) {
-            interaction.followUp("The playlist could not be found");
+            const embed = new EmbedBuilder();
+            embed.setTitle(`${interaction.user.username} No se encontró la canción o la URL no es válida 😔`);
+            embed.setColor("#F20B35");
+            interaction.followUp({ embeds: [embed] });
         }
         else {
             const embed = new EmbedBuilder();
-            embed.setTitle("Enqueued");
-            embed.setDescription(`Enqueued  **${songs.length}** songs from playlist`);
+            embed.setTitle("Agregada a la cola");
+            embed.setColor("#0BF296");
+            embed.setDescription(`Se agregaron  **${songs.length}** canciones de la playlist **${playlistName}**`);
             interaction.followUp({ embeds: [embed] });
         }
     }
@@ -190,19 +199,19 @@ let music = class music {
         if (!interaction.guild ||
             !(interaction.member instanceof GuildMember) ||
             !interaction.channel) {
-            interaction.reply("> Your request could not be processed, please try again later");
+            interaction.reply("> Su solicitud no se puede procesar en este momento. Inténtalo de nuevo más tarde 😔.");
             setTimeout(() => interaction.deleteReply(), 15e3);
             return;
         }
         if (!interaction.member.voice.channel) {
-            interaction.reply("> To use the music commands, you need to join voice channel");
+            interaction.reply("> Debes estar en un canal de voz para usar este comando.");
             setTimeout(() => interaction.deleteReply(), 15e3);
             return;
         }
         const queue = this.player.getQueue(interaction.guild, interaction.channel);
         if (!queue.isReady ||
             interaction.member.voice.channel.id !== queue.voiceChannelId) {
-            interaction.reply("> To use the music commands, you need to join the bot voice channel");
+            interaction.reply("> Debes estar en el mismo canal de voz que el bot para usar este comando.");
             setTimeout(() => interaction.deleteReply(), 15e3);
             return;
         }
@@ -215,7 +224,7 @@ let music = class music {
         }
         const { queue } = validate;
         queue.skip();
-        interaction.reply("> skipped current song");
+        interaction.reply("> cancion actual saltada");
     }
     mix(interaction) {
         const validate = this.validateInteraction(interaction);
@@ -224,7 +233,7 @@ let music = class music {
         }
         const { queue } = validate;
         queue.mix();
-        interaction.reply("> mixed current queue");
+        interaction.reply("> cola mezclada");
     }
     pause(interaction) {
         const validate = this.validateInteraction(interaction);
@@ -233,11 +242,11 @@ let music = class music {
         }
         const { queue } = validate;
         if (queue.isPause) {
-            interaction.reply("> already paused");
+            interaction.reply("> ya esta pausado");
             return;
         }
         queue.pause();
-        interaction.reply("> paused music");
+        interaction.reply("> musica pausada");
     }
     resume(interaction) {
         const validate = this.validateInteraction(interaction);
@@ -246,37 +255,48 @@ let music = class music {
         }
         const { queue } = validate;
         if (queue.isPlaying) {
-            interaction.reply("> already playing");
+            interaction.reply("> ya esta reproduciendo");
             return;
         }
         queue.resume();
-        interaction.reply("> resumed music");
+        interaction.reply("> musica reanudada");
     }
-    seek(time, interaction) {
-        const validate = this.validateInteraction(interaction);
-        if (!validate) {
-            return;
-        }
-        const { queue } = validate;
-        if (!queue.isPlaying || !queue.currentTrack) {
-            interaction.reply("> currently not playing any song");
-            return;
-        }
-        const state = queue.seek(time * 1000);
-        if (!state) {
-            interaction.reply("> could not seek");
-            return;
-        }
-        interaction.reply("> current music seeked");
-    }
-    leave(interaction) {
+    // @Slash({ description: "seek music" })
+    // seek(
+    //   @SlashOption({
+    //     description: "seek time in seconds",
+    //     name: "time",
+    //     required: true,
+    //     type: ApplicationCommandOptionType.Number,
+    //   })
+    //   time: number,
+    //   interaction: CommandInteraction
+    // ): void {
+    //   const validate = this.validateInteraction(interaction);
+    //   if (!validate) {
+    //     return;
+    //   }
+    //   const { queue } = validate;
+    //   if (!queue.isPlaying || !queue.currentTrack) {
+    //     interaction.reply("> currently not playing any song");
+    //     return;
+    //   }
+    //   const state = queue.seek(time * 1000);
+    //   console.log(state)
+    //   if (!state) {
+    //     interaction.reply("> could not seek");
+    //     return;
+    //   }
+    //   interaction.reply("> current music seeked");
+    // }
+    detener(interaction) {
         const validate = this.validateInteraction(interaction);
         if (!validate) {
             return;
         }
         const { queue } = validate;
         queue.leave();
-        interaction.reply("> stopped music");
+        interaction.reply("> musica detenida");
     }
 };
 __decorate([
@@ -328,9 +348,9 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], music.prototype, "controlsControl", null);
 __decorate([
-    Slash({ description: "Play a song" }),
+    Slash({ description: "Reproduce una canción" }),
     __param(0, SlashOption({
-        description: "song url or title",
+        description: "url o nombre de la canción",
         name: "song",
         required: true,
         type: ApplicationCommandOptionType.String,
@@ -340,9 +360,9 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], music.prototype, "play", null);
 __decorate([
-    Slash({ description: "Play a playlist" }),
+    Slash({ description: "Reproduce una playlist" }),
     __param(0, SlashOption({
-        description: "playlist name",
+        description: "nombre de la playlist",
         name: "playlist",
         required: true,
         type: ApplicationCommandOptionType.String,
@@ -352,47 +372,35 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], music.prototype, "playlist", null);
 __decorate([
-    Slash({ description: "skip track" }),
+    Slash({ description: "Siguiente cancion" }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Function]),
     __metadata("design:returntype", void 0)
 ], music.prototype, "skip", null);
 __decorate([
-    Slash({ description: "mix tracks" }),
+    Slash({ description: "mixear la cola, revuelte la cola actual" }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Function]),
     __metadata("design:returntype", void 0)
 ], music.prototype, "mix", null);
 __decorate([
-    Slash({ description: "pause music" }),
+    Slash({ description: "pausar musica" }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Function]),
     __metadata("design:returntype", void 0)
 ], music.prototype, "pause", null);
 __decorate([
-    Slash({ description: "resume music" }),
+    Slash({ description: "reanudar musica" }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Function]),
     __metadata("design:returntype", void 0)
 ], music.prototype, "resume", null);
 __decorate([
-    Slash({ description: "seek music" }),
-    __param(0, SlashOption({
-        description: "seek time in seconds",
-        name: "time",
-        required: true,
-        type: ApplicationCommandOptionType.Number,
-    })),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Function]),
-    __metadata("design:returntype", void 0)
-], music.prototype, "seek", null);
-__decorate([
-    Slash({ description: "stop music" }),
+    Slash({ description: "detener musica" }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Function]),
     __metadata("design:returntype", void 0)
-], music.prototype, "leave", null);
+], music.prototype, "detener", null);
 music = __decorate([
     Discord()
     // Create music group
