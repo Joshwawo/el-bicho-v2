@@ -7,7 +7,7 @@ import {
 import axios from "axios";
 
 @Discord()
-export class Testing2 {
+export class Cats {
   @Slash({ description: "Return a cats images", name: "cats" })
   async cats(interaction: CommandInteraction) {
     await interaction.deferReply();

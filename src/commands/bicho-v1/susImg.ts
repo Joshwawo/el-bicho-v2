@@ -7,7 +7,7 @@ import {
 import axios from "axios";
 
 @Discord()
-export class SoloSinNada {
+export class SusImages {
   @Slash({ description: "Return a sus image", name: "sus" })
  async sus(interaction: CommandInteraction) {
     try {

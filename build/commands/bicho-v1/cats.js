@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { Discord, Slash } from "discordx";
 import { CommandInteraction, } from "discord.js";
 import axios from "axios";
-let Testing2 = class Testing2 {
+let Cats = class Cats {
     async cats(interaction) {
         await interaction.deferReply();
         try {
@@ -31,8 +31,8 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [CommandInteraction]),
     __metadata("design:returntype", Promise)
-], Testing2.prototype, "cats", null);
-Testing2 = __decorate([
+], Cats.prototype, "cats", null);
+Cats = __decorate([
     Discord()
-], Testing2);
-export { Testing2 };
+], Cats);
+export { Cats };
