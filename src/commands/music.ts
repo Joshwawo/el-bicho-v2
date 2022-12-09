@@ -72,7 +72,7 @@ export class MyQueue extends Queue {
 
     const pauseButton = new ButtonBuilder()
       .setLabel(this.isPlaying ? "Pause" : "Resume")
-      .setEmoji(this.isPlaying ? "⏸️" : "▶️")
+      .setEmoji(this.isPlaying ? "⏸️" : "▶")
       .setStyle(ButtonStyle.Primary)
       .setCustomId("btn-pause");
 
